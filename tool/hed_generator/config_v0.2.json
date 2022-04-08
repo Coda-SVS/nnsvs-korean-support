@@ -1,0 +1,15 @@
+{
+    "all_phonemes": [
+        "br", "cl", "pau", "sil", "a", "ya", "eo", "yeo", "o", "yo", "u", "yu", "eu", "i", "e", "ye", "wa", "weo", "oe", "wi",
+        "g", "n", "d", "r", "m", "b", "s", "j", "ch", "k", "t", "p", "h", "gg", "dd", "bb", "ss", "jj",
+        "G", "N", "D", "L", "M", "B", "NG"
+    ],
+
+    "phoneme_classification": {
+        "Phone_Muon": ["pau", "sil"],
+
+        "Vowels": ["a", "ya", "eo", "yeo", "o", "yo", "u", "yu", "eu", "i", "e", "ye", "wa", "weo", "oe", "wi"],
+        "Consonant": ["g", "n", "d", "r", "m", "b", "s", "j", "ch", "k", "t", "p", "h", "gg", "dd", "bb", "ss", "jj"],
+        "Last_Consonant": ["G", "N", "D", "L", "M", "B", "NG"]
+    }
+}
