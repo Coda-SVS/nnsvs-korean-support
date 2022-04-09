@@ -30,14 +30,16 @@
 
 3. Proceed with the phoneme alignment operation.
 
-    1. To create and delete labels in the .lab area
+    > ⚠️ To avoid losing your work history, you must save it. ⚠️
+
+    1. To create and delete labels in the .lab area.  
 
     https://user-images.githubusercontent.com/25889754/162585170-715dee2e-17c0-48a7-90f2-c5f1e1ac642e.mp4
 
-    2. You can move the label.
+    2. You can move the label.  
 
     https://user-images.githubusercontent.com/25889754/162585179-c21d3061-754d-4768-9c5c-557d43f5075f.mp4
 
 4. 🎉 Finish
 
-    > You can use the completed .lab file.
+    > Completed after saving. You can use the .lab file.
