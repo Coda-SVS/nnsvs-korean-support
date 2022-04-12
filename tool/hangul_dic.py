@@ -1,5 +1,5 @@
-# 해당 자소 및 음소는 공식적인 문법이 아닐 수 있습니다.
-# (보기에 더 좋게 설계됨)
+# 해당 자소 및 음소는 공식적인 문법이 아닐 수 있습니다. (보기에 더 좋게 설계됨)
+# These consonants and phonemes may not be official grammar. (Designed to look better)
 
 
 First_Consonant_DIC = {
@@ -72,7 +72,7 @@ Middle_Vowel_DIC = {
 #     # "ㅢ": "eui",
 # }
 
-Last_Consonant_DIC = {
+Last_Consonant_DIC = {  # 음절 끝소리 규칙
     "ㄱ": "G",
     "ㄴ": "N",
     "ㄷ": "D",

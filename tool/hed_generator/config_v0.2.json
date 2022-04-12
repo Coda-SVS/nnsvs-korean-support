@@ -6,7 +6,7 @@
     ],
 
     "phoneme_classification": {
-        "Phone_Muon": ["pau", "sil"],
+        "Phone_Muon": ["pau", "sil", "cl", "br"],
 
         "Vowels": ["a", "ya", "eo", "yeo", "o", "yo", "u", "yu", "eu", "i", "e", "ye", "wa", "weo", "oe", "wi"],
         "Consonant": ["g", "n", "d", "r", "m", "b", "s", "j", "ch", "k", "t", "p", "h", "gg", "dd", "bb", "ss", "jj"],

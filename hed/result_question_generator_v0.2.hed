@@ -1,4 +1,4 @@
-QS "L-Phone_Phone_Muon" {*^pau-*,*^sil-*}
+QS "L-Phone_Phone_Muon" {*^pau-*,*^sil-*,*^cl-*,*^br-*}
 QS "L-Phone_Vowels" {*^a-*,*^ya-*,*^eo-*,*^yeo-*,*^o-*,*^yo-*,*^u-*,*^yu-*,*^eu-*,*^i-*,*^e-*,*^ye-*,*^wa-*,*^weo-*,*^oe-*,*^wi-*}
 QS "L-Phone_Consonant" {*^g-*,*^n-*,*^d-*,*^r-*,*^m-*,*^b-*,*^s-*,*^j-*,*^ch-*,*^k-*,*^t-*,*^p-*,*^h-*,*^gg-*,*^dd-*,*^bb-*,*^ss-*,*^jj-*}
 QS "L-Phone_Last_Consonant" {*^G-*,*^N-*,*^D-*,*^L-*,*^M-*,*^B-*,*^NG-*}
@@ -47,7 +47,7 @@ QS "L-Phone_L" {*^L-*}
 QS "L-Phone_M" {*^M-*}
 QS "L-Phone_B" {*^B-*}
 QS "L-Phone_NG" {*^NG-*}
-QS "C-Phone_Phone_Muon" {*-pau+*,*-sil+*}
+QS "C-Phone_Phone_Muon" {*-pau+*,*-sil+*,*-cl+*,*-br+*}
 QS "C-Phone_Vowels" {*-a+*,*-ya+*,*-eo+*,*-yeo+*,*-o+*,*-yo+*,*-u+*,*-yu+*,*-eu+*,*-i+*,*-e+*,*-ye+*,*-wa+*,*-weo+*,*-oe+*,*-wi+*}
 QS "C-Phone_Consonant" {*-g+*,*-n+*,*-d+*,*-r+*,*-m+*,*-b+*,*-s+*,*-j+*,*-ch+*,*-k+*,*-t+*,*-p+*,*-h+*,*-gg+*,*-dd+*,*-bb+*,*-ss+*,*-jj+*}
 QS "C-Phone_Last_Consonant" {*-G+*,*-N+*,*-D+*,*-L+*,*-M+*,*-B+*,*-NG+*}
@@ -96,7 +96,7 @@ QS "C-Phone_L" {*-L+*}
 QS "C-Phone_M" {*-M+*}
 QS "C-Phone_B" {*-B+*}
 QS "C-Phone_NG" {*-NG+*}
-QS "R-Phone_Phone_Muon" {*+pau=*,*+sil=*}
+QS "R-Phone_Phone_Muon" {*+pau=*,*+sil=*,*+cl=*,*+br=*}
 QS "R-Phone_Vowels" {*+a=*,*+ya=*,*+eo=*,*+yeo=*,*+o=*,*+yo=*,*+u=*,*+yu=*,*+eu=*,*+i=*,*+e=*,*+ye=*,*+wa=*,*+weo=*,*+oe=*,*+wi=*}
 QS "R-Phone_Consonant" {*+g=*,*+n=*,*+d=*,*+r=*,*+m=*,*+b=*,*+s=*,*+j=*,*+ch=*,*+k=*,*+t=*,*+p=*,*+h=*,*+gg=*,*+dd=*,*+bb=*,*+ss=*,*+jj=*}
 QS "R-Phone_Last_Consonant" {*+G=*,*+N=*,*+D=*,*+L=*,*+M=*,*+B=*,*+NG=*}

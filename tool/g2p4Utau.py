@@ -19,7 +19,6 @@ class g2p4Utau(object):
         if len(text_list) == 0:
             return None
 
-        orgin_jamo = ""
         phn_list = []
         token_phn_list = []
         for idx in range(len(text_list)):
@@ -38,7 +37,6 @@ class g2p4Utau(object):
                     continue
 
                 token_jamo = j2hcj(h2j(token))
-                orgin_jamo += token_jamo
 
                 token_phn = ""
                 for idx, jamo in enumerate(token_jamo):
@@ -54,7 +52,7 @@ class g2p4Utau(object):
                 # print(orgin_jamo)
                 # print(phn_list)
 
-        return "\n".join(text_list), orgin_jamo, phn_list, token_phn_list
+        return "\n".join(text_list), phn_list, token_phn_list
 
     def replace_jamo(self, idx: int, jamo: str):
         if idx == 0:
@@ -85,7 +83,21 @@ class g2p4Utau(object):
 if __name__ == "__main__":
     tester = g2p4Utau()
 
-    print(tester("Test"))
+    def pretty_print(obj):
+        print(f"> G2P Processed: {obj[0]}")
+        print(f"> Phoneme List: {', '.join(obj[1])}")
+        print(f"> Character Phoneme List: {', '.join(obj[2])}")
+
+    while True:
+        try:
+            text = input()
+        except KeyboardInterrupt:
+            print("Done.")
+            break
+
+        pretty_print(tester(text))
+
+    # print(tester("Test"))
 
 ############################ My Test Case ############################
 # print(tester("""재밌어"""))

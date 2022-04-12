@@ -38,7 +38,7 @@ def table_gen_main(
     자소 음소 테이블을 생성합니다.
     """
 
-    with open(path, "r", encoding="utf8") as table_file:
+    with open(path, "r", encoding="utf-8") as table_file:
         table_source = table_file.readlines()
 
     table_source = ("".join(table_source)).replace("\n", "").replace(" ", "")
@@ -80,7 +80,7 @@ def table_gen_main(
         result += f"{''.join(temp[3])} {' '.join(temp[3])}\n"
     result = result[:-1]
 
-    with open(phn_output_path, "w", encoding="utf8") as result_file:
+    with open(phn_output_path, "w", encoding="utf-8") as result_file:
         result_file.write(result)
 
     # 한글
@@ -90,7 +90,7 @@ def table_gen_main(
         result += f"{''.join(temp[0])} {' '.join(temp[3])}\n"
     result = result[:-1]
 
-    with open(hangul_output_path, "w", encoding="utf8") as result_file:
+    with open(hangul_output_path, "w", encoding="utf-8") as result_file:
         result_file.write(result)
 
     # 한글 + 음소
@@ -100,7 +100,7 @@ def table_gen_main(
         result += f"{''.join(temp[0])}_{''.join(temp[3])} {' '.join(temp[3])}\n"
     result = result[:-1]
 
-    with open(hangul_phn_output_path, "w", encoding="utf8") as result_file:
+    with open(hangul_phn_output_path, "w", encoding="utf-8") as result_file:
         result_file.write(result)
 
     result_len = len(result.split("\n"))
@@ -118,7 +118,7 @@ def table_simplify_main(path="hangul.origndic", output_path="result_hangul.orign
     단, g2p 모듈에 따라 결과가 달라질 수 있습니다.
     """
 
-    with open(path, "r", encoding="utf8") as table_file:
+    with open(path, "r", encoding="utf-8") as table_file:
         table_source = table_file.readlines()
 
     table_source = ("".join(table_source)).replace("\n", "").replace(" ", "")
@@ -145,7 +145,7 @@ def table_simplify_main(path="hangul.origndic", output_path="result_hangul.orign
             post_processed_dic.append(temp[3])
             post_processed += temp[1]
 
-    with open(output_path, "w", encoding="utf8") as result_file:
+    with open(output_path, "w", encoding="utf-8") as result_file:
         result_file.write(post_processed)
 
     result_len = len(post_processed)

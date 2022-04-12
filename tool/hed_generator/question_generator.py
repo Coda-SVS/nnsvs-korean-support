@@ -129,7 +129,7 @@ def str_fixed_qs_and_cqs():
 
 
 def main():
-    with open("tool\\question_generator\\config.json", mode="r", encoding="utf-8") as fj:
+    with open("tool\\hed_generator\\config_v0.2.json", mode="r", encoding="utf-8") as fj:
         d_json = json.load(fj)
     list_all_phonemes = d_json["all_phonemes"]
     dict_phoneme_classification = d_json["phoneme_classification"]
@@ -139,7 +139,7 @@ def main():
     s += str_phone_questions(list_all_phonemes, dict_phoneme_classification, mode="R")
     s += "\n"
     s += str_fixed_qs_and_cqs()
-    with open("tool\\question_generator\\result_question_generator.hed", mode="w", encoding="utf-8") as ft:
+    with open("tool\\hed_generator\\result_question_generator.hed", mode="w", encoding="utf-8") as ft:
         ft.write(s)
 
 
