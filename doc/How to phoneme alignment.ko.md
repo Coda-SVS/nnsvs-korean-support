@@ -26,7 +26,7 @@
 
     > ⚠ "기본 구성으로 설정" 옵션을 선택하지 마세요! ⚠️
 
-    > <imgsrc="../resources/WaveSurfer_001.webp" />
+    > <img src="../resources/WaveSurfer_001.webp" />
 
 3. 음소 정렬 작업을 진행합니다.
 
