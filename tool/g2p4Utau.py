@@ -1,14 +1,17 @@
 import re
 from jamo import h2j, j2hcj
-from hangul_dic import First_Consonant_DIC, Middle_Vowel_DIC, Last_Consonant_DIC
+from hangul_dic import get_phn_dictionary, Vowels_LIST
 
 
 class g2p4Utau(object):
     def __init__(self):
         self.g2p = None
-        self.r_l_flag = False
+        self.set_dictionary_mode()
 
-    def __call__(self, text: str, use_g2pK: bool = True, descriptive: bool = True, group_vowels: bool = True):
+    def set_dictionary_mode(self, labeling_mode: bool = True):
+        self.dictionary = get_phn_dictionary(labeling_mode)
+
+    def __call__(self, text: str, use_g2pK: bool = True, descriptive: bool = False, group_vowels: bool = False):
         text_list = text.split("\n")
 
         for idx in range(len(text_list)):
@@ -22,8 +25,6 @@ class g2p4Utau(object):
         phn_list = []
         token_phn_list = []
         for idx in range(len(text_list)):
-            self.clear_state()
-
             if use_g2pK:
                 if self.g2p == None:
                     import g2pk
@@ -32,6 +33,7 @@ class g2p4Utau(object):
 
                 text_list[idx] = self.g2p(text_list[idx], descriptive=descriptive, group_vowels=group_vowels)
 
+            before_jamo = ""
             for token in text_list[idx]:
                 if token == " " or token == "\n":
                     continue
@@ -40,44 +42,40 @@ class g2p4Utau(object):
 
                 token_phn = ""
                 for idx, jamo in enumerate(token_jamo):
-                    phn = self.replace_jamo(idx, jamo)
+                    phn = self.replace_jamo(idx, jamo, before_jamo)
+
                     if phn != "":
-                        phn_list.append(phn)
-                        token_phn += phn
+                        for ph in phn.split(" "):
+                            phn_list.append(ph)
+                            token_phn += ph
+
+                    before_jamo = jamo
 
                 if token_phn != "":
                     token_phn_list.append(token_phn)
 
-                # print(token_jamo)
-                # print(orgin_jamo)
-                # print(phn_list)
-
         return "\n".join(text_list), phn_list, token_phn_list
 
-    def replace_jamo(self, idx: int, jamo: str):
-        if idx == 0:
-            if self.r_l_flag and jamo == "ㄹ":  # (초성에는 r, 받침과 이어지는 ㄹ은 l)
-                return "l"
+    def replace_jamo(self, idx: int, jamo: str, before_jamo: str = ""):
+        jamo_dic = self.dictionary[idx][jamo]
+
+        if before_jamo in jamo_dic.keys():
+            return jamo_dic[before_jamo]
+        else:
+            if before_jamo == "":
+                if idx == 0:
+                    prefix = "+*"
+                elif idx == 1:
+                    prefix = "+*"
+                else:
+                    prefix = "-*"
             else:
-                return First_Consonant_DIC[jamo]
+                if before_jamo in Vowels_LIST:
+                    prefix = "-*"
+                else:
+                    prefix = "+*"
 
-        elif idx == 1:
-            self.r_l_flag = True
-            return Middle_Vowel_DIC[jamo]
-
-        elif idx == 2:
-            # if jamo == "ㅅ":
-            #     jamo = "ㄷ"
-
-            if jamo == "ㄹ":
-                self.r_l_flag = True
-            else:
-                self.r_l_flag = False
-
-            return Last_Consonant_DIC[jamo]
-
-    def clear_state(self):
-        self.r_l_flag = False
+            return jamo_dic[prefix]
 
 
 if __name__ == "__main__":
@@ -88,14 +86,29 @@ if __name__ == "__main__":
         print(f"> Phoneme List: {', '.join(obj[1])}")
         print(f"> Character Phoneme List: {', '.join(obj[2])}")
 
-    while True:
-        try:
-            text = input()
-        except KeyboardInterrupt:
-            print("Done.")
-            break
+    text = "안녕하세요\n둥근 해가 떴습니다\n바깥 공기가 상쾌하다\n의사 선생님\n악수를 합시다"
 
-        pretty_print(tester(text))
+    for text_token in text.split("\n"):
+        print("라벨링: True")
+        pretty_print(tester(text_token))
+        tester.set_dictionary_mode(False)
+        print()
+        print("라벨링: False")
+        pretty_print(tester(text_token))
+        tester.set_dictionary_mode(True)
+        print("\n#############################\n")
+
+    # while True:
+    #     try:
+    #         text = input()
+    #     except KeyboardInterrupt:
+    #         print("Done.")
+    #         break
+
+    #     pretty_print(tester(text))
+    #     tester.set_dictionary_mode(False)
+    #     pretty_print(tester(text))
+    #     tester.set_dictionary_mode(True)
 
     # print(tester("Test"))
 
