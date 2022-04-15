@@ -1,17 +1,15 @@
 import re
 from jamo import h2j, j2hcj
-from hangul_dic import get_phn_dictionary, Vowels_LIST
+from hangul_dic import get_phn_dictionary, replace2phn
 
 
 class g2p4Utau(object):
     def __init__(self):
         self.g2p = None
-        self.set_dictionary_mode()
+        self.dictionary = get_phn_dictionary(False)
+        self.dictionary_label_mode = get_phn_dictionary(True)
 
-    def set_dictionary_mode(self, labeling_mode: bool = True):
-        self.dictionary = get_phn_dictionary(labeling_mode)
-
-    def __call__(self, text: str, use_g2pK: bool = True, descriptive: bool = False, group_vowels: bool = False):
+    def __call__(self, text: str, use_g2pK: bool = True, descriptive: bool = False, group_vowels: bool = False, labeling_mode: bool = True):
         text_list = text.split("\n")
 
         for idx in range(len(text_list)):
@@ -22,8 +20,6 @@ class g2p4Utau(object):
         if len(text_list) == 0:
             return None
 
-        phn_list = []
-        token_phn_list = []
         for idx in range(len(text_list)):
             if use_g2pK:
                 if self.g2p == None:
@@ -33,49 +29,14 @@ class g2p4Utau(object):
 
                 text_list[idx] = self.g2p(text_list[idx], descriptive=descriptive, group_vowels=group_vowels)
 
-            before_jamo = ""
-            for token in text_list[idx]:
-                if token == " " or token == "\n":
-                    continue
+            jamo_text = j2hcj(h2j(text_list[idx]))
 
-                token_jamo = j2hcj(h2j(token))
+            phn_text = replace2phn(self.dictionary_label_mode if labeling_mode else self.dictionary, jamo_text)
 
-                token_phn = ""
-                for idx, jamo in enumerate(token_jamo):
-                    phn = self.replace_jamo(idx, jamo, before_jamo)
+            phn_list = list(filter(lambda phn: phn != "", phn_text.split(" ")))
+            phn_list.append("\n")
 
-                    if phn != "":
-                        for ph in phn.split(" "):
-                            phn_list.append(ph)
-                            token_phn += ph
-
-                    before_jamo = jamo
-
-                if token_phn != "":
-                    token_phn_list.append(token_phn)
-
-        return "\n".join(text_list), phn_list, token_phn_list
-
-    def replace_jamo(self, idx: int, jamo: str, before_jamo: str = ""):
-        jamo_dic = self.dictionary[idx][jamo]
-
-        if before_jamo in jamo_dic.keys():
-            return jamo_dic[before_jamo]
-        else:
-            if before_jamo == "":
-                if idx == 0:
-                    prefix = "+*"
-                elif idx == 1:
-                    prefix = "+*"
-                else:
-                    prefix = "-*"
-            else:
-                if before_jamo in Vowels_LIST:
-                    prefix = "-*"
-                else:
-                    prefix = "+*"
-
-            return jamo_dic[prefix]
+        return "\n".join(text_list), phn_list[:-1]
 
 
 if __name__ == "__main__":
@@ -84,18 +45,24 @@ if __name__ == "__main__":
     def pretty_print(obj):
         print(f"> G2P Processed: {obj[0]}")
         print(f"> Phoneme List: {', '.join(obj[1])}")
-        print(f"> Character Phoneme List: {', '.join(obj[2])}")
 
-    text = "안녕하세요\n둥근 해가 떴습니다\n바깥 공기가 상쾌하다\n의사 선생님\n악수를 합시다"
+    text = """안녕하세요
+둥근 해가 떴습니다
+바깥 공기가 상쾌하다
+의사 선생님
+악수를 합시다
+말하다
+라면
+말하다
+아라라
+랄랄라"""
 
     for text_token in text.split("\n"):
         print("라벨링: True")
-        pretty_print(tester(text_token))
-        tester.set_dictionary_mode(False)
+        pretty_print(tester(text_token, labeling_mode=True))
         print()
         print("라벨링: False")
-        pretty_print(tester(text_token))
-        tester.set_dictionary_mode(True)
+        pretty_print(tester(text_token, labeling_mode=False))
         print("\n#############################\n")
 
     # while True:
