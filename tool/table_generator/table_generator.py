@@ -1,11 +1,11 @@
 from tqdm import tqdm
-from g2p4Utau import g2p4Utau
+from g2p4utau import g2p4utau
 from tqdm.contrib.concurrent import process_map
 from functools import partial
 
 
 def table_generator(table_data, idx):
-    converter = g2p4Utau()
+    converter = g2p4utau()
 
     result = []
     for char in tqdm(table_data[idx], "Converting..."):

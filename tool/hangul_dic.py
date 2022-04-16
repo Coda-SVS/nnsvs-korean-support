@@ -50,7 +50,7 @@ def replace2phn(dic: dict, jamo_text: str, verbose: VerboseMode = VerboseMode.NO
                 before_text = jamo_text
 
     if verbose__ and len(verbose_result) > 1:
-        print("\033[1;96m[g2p4Utau Processing]\033[0m")
+        print("\033[1;96m[g2p4utau Processing]\033[0m")
         for line in verbose_result:
             print("->", line[0], f"        [\033[1;92m{line[2]}\033[0m] ({line[1]})")
 

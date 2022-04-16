@@ -1,14 +1,14 @@
 import os
 import re
 from tqdm import tqdm
-from g2p4Utau import g2p4Utau
+from g2p4utau import g2p4utau
 
-converter = g2p4Utau()
+converter = g2p4utau()
 
 
-def convert(table_data: dict, text: str, use_g2p4Utau=True):
+def convert(table_data: dict, text: str, use_g2p4utau=True):
 
-    if use_g2p4Utau:
+    if use_g2p4utau:
         text = converter(text)[0]
 
     text = re.sub(r"[-=+,#/\?:^$.@*\"※~&%ㆍ!』\\‘|\(\)\[\]\<\>`\'…》 \n]", "", text)
@@ -37,7 +37,7 @@ def table_loader(table_path: str):
 
 if __name__ == "__main__":
 
-    use_g2p4Utau = True
+    use_g2p4utau = True
     table_data = table_loader("../table/result_hangul.table")
     directory_path = "Text_Source"
 
@@ -47,7 +47,7 @@ if __name__ == "__main__":
         with open(filename, mode="r", encoding="utf-8") as file:
             text = file.read()
 
-        text = convert(table_data, text, use_g2p4Utau)
+        text = convert(table_data, text, use_g2p4utau)
 
         fname, fext = os.path.splitext(filename)
 
