@@ -1,4 +1,5 @@
-tool/Scripts
+/tool/test.py
+/tool/Scripts
 pyvenv.cfg
 
 *.wav

@@ -5,10 +5,9 @@ import regex
 
 
 ## For Verbose
-import difflib
 from enum_set import VerboseMode
 
-differ = difflib.Differ()
+differ = None
 
 
 Consonants_LIST = ["ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ", "ㄲ", "ㄸ", "ㅃ", "ㅆ", "ㅉ"]
@@ -28,6 +27,11 @@ def replace2phn(dic: dict, jamo_text: str, verbose: VerboseMode = VerboseMode.NO
             jamo_text = regex.sub(pattern, repl, jamo_text)
 
             if verbose__ and not before_text == jamo_text:
+                if differ == None:
+                    import difflib
+
+                    differ = difflib.Differ()
+
                 highlight = False
                 lst = []
                 for diff in differ.compare(before_text, jamo_text):
