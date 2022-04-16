@@ -4,23 +4,52 @@
 import regex
 
 
+## For Verbose
+import difflib
+
+differ = difflib.Differ()
+
+
 Consonants_LIST = ["ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ", "ㄲ", "ㄸ", "ㅃ", "ㅆ", "ㅉ"]
 Vowels_LIST = ["ㅏ", "ㅑ", "ㅓ", "ㅕ", "ㅗ", "ㅛ", "ㅜ", "ㅠ", "ㅡ", "ㅣ", "ㅐ", "ㅒ", "ㅔ", "ㅖ", "ㅘ", "ㅙ", "ㅚ", "ㅝ", "ㅞ", "ㅟ", "ㅢ"]
 
 
-def replace2phn(regex_list: list, jamo_text: str, verbose: bool = False):
+# TODO: 나중에 함수 위치를 적절한 곳으로 옮기기
+def replace2phn(dic: dict, jamo_text: str, verbose: bool = False):
     if verbose:
         before_text = jamo_text
+        verbose_result = [(jamo_text, "", "init")]
 
-    for pattern, repl in regex_list:
-        if verbose:
-            if not before_text == jamo_text:
-                print(f"> {before_text}\n-> {jamo_text}\n")
-            before_text = jamo_text
-        jamo_text = regex.sub(pattern, repl, jamo_text)
+    for key in dic.keys():
+        for pattern, repl in dic[key]:
+            jamo_text = regex.sub(pattern, repl, jamo_text)
 
-    if verbose:
-        print(f"> {before_text}\n-> {jamo_text}\n")
+            if verbose and not before_text == jamo_text:
+                highlight = False
+                lst = []
+                for diff in differ.compare(before_text, jamo_text):
+                    if diff[0] == " ":
+                        if highlight:
+                            lst.append("\033[0m")
+                            highlight = False
+                        lst.append(diff[2])
+                    elif diff[0] == "+":
+                        if not highlight:
+                            lst.append("\033[1;91m")
+                            highlight = True
+                        lst.append(diff[2])
+
+                if highlight:
+                    lst.append("\033[0m")
+
+                verbose_result.append(("".join(lst), f"{pattern} \033[1;33m->\033[0m {repl}", key))
+
+                before_text = jamo_text
+
+    if verbose and len(verbose_result) > 1:
+        print("\033[1;96m[g2p4Utau Processing]\033[0m")
+        for line in verbose_result:
+            print("->", line[0], f"        [\033[1;92m{line[2]}\033[0m] ({line[1]})")
 
     return jamo_text[:-1]
 
@@ -29,16 +58,16 @@ def get_phn_dictionary(labeling_mode: bool = True):
 
     ##### 전처리 #####
     pre_regex_list = [
-        (r"ㄹ\s*ㄹ", r"l l "),
+        (r"ㄹ(\s*)ㄹ", r"l\1l "),
         # 모음 뒤, 'ㅎ' 앞의 'ㄹ'
-        (r"ㄹ\s*ㅎ", r"r h "),
+        # (r"ㄹ(\s*)ㅎ", r"r\1h "),
         # 모음과 모음 사이 'ㄹ'
         (r"(?<=[ㅏ-ㅣ]\s*)ㄹ(?=\s*[ㅏ-ㅣ])", r"r "),
     ]
 
     if labeling_mode:
-        pre_regex_list.append((r"(?<=ㄱ\s*)ㅆ", r"k ss "))
-        pre_regex_list.append((r"(?<=ㅂ\s*)ㅆ", r"p ss "))
+        pre_regex_list.append((r"(?<=ㄱ)(\s*)ㅆ", r"k\1ss "))
+        pre_regex_list.append((r"(?<=ㅂ)(\s*)ㅆ", r"p\1ss "))
     else:
         pre_regex_list.append((r"(?<=ㄱ\s*)ㅆ", r"kss "))
         pre_regex_list.append((r"(?<=ㅂ\s*)ㅆ", r"pss "))
@@ -101,7 +130,7 @@ def get_phn_dictionary(labeling_mode: bool = True):
         vowels_process_regex_list.append((r"ㅟ", r"w i "))
         # UTAU에서는 사용되지 않지만 상황에 따라 'e'발음을 원순모음화 시 발생
         vowels_process_regex_list.append((r"ㅝ", r"w eo "))
-        # 라벨링을 할 때는 'wu i'로 구분
+        # 라벨링을 할 때는 'eu i'로 구분
         vowels_process_regex_list.append((r"ㅢ", r"eu i "))
     else:
         vowels_process_regex_list.append((r"ㅑ", r"ya "))
@@ -118,7 +147,6 @@ def get_phn_dictionary(labeling_mode: bool = True):
         vowels_process_regex_list.append((r"ㅟ", r"wi "))
         # UTAU에서는 사용되지 않지만 상황에 따라 'e'발음을 원순모음화 시 발생
         vowels_process_regex_list.append((r"ㅝ", r"weo "))
-        # 라벨링을 할 때는 'wu i'로 구분
         vowels_process_regex_list.append((r"ㅢ", r"eui "))
 
     ########
@@ -127,55 +155,41 @@ def get_phn_dictionary(labeling_mode: bool = True):
     tail_consonants_process_regex_list = [
         # 악, 앜, 앆... 등에 쓰이는 받침
         (r"ㄱ", r"K "),
-        # 안 ... 등에 쓰이는 받침
-        (r"ㄴ", r"N "),
         # 앋, 앗, 앚, 앛, 앝, 앟, 았 ... 등에 쓰이는 받침
         (r"ㄷ", r"T "),
-        # 알 ... 등에 쓰이는 받침
-        (r"ㄹ", r"L "),
-        # 암 ... 등에 쓰이는 받침
-        (r"ㅁ", r"M "),
         # 압, 앞 ... 등에 쓰이는 받침
         (r"ㅂ", r"P "),
-        # 앙 ... 등에 쓰이는 받침
+        # 유성 받침은 초성과 발음이 유사
+        # # 안 ... 등에 쓰이는 받침
+        # (r"ㄴ", r"N "),
+        # # 알 ... 등에 쓰이는 받침
+        # (r"ㄹ", r"L "),
+        # # 암 ... 등에 쓰이는 받침
+        # (r"ㅁ", r"M "),
+        # 안 ... 등에 쓰이는 받침
+        (r"ㄴ", r"n "),
+        # 알 ... 등에 쓰이는 받침
+        (r"ㄹ", r"l "),
+        # 암 ... 등에 쓰이는 받침
+        (r"ㅁ", r"m "),
+        # 앙 ... 등에 쓰이는 받침 (유성 받침, 초성에서 발음이 없음)
         (r"ㅇ", r"NG "),
     ]
 
     ##### 후처리 #####
     post_regex_list = [
-        # (r"\s{2,}", r" "),
+        # # 음소 구분
+        # (r"\s{2}", r" "),
+        # # 글자 구분
+        # (r"\s{3}", r"  "),
     ]
 
-    # if not labeling_mode:
-    #     Lead_Consonants_DIC["ㅆ"] = {"+*": "ss", "-*": "ss", "ㄱ": "kss", "ㅂ": "pss"}
+    result_dic = {
+        "Pre": pre_regex_list,
+        "Lead Consonants": lead_consonants_process_regex_list,
+        "Vowels": vowels_process_regex_list,
+        "Tail Consonants": tail_consonants_process_regex_list,
+        "Post": post_regex_list,
+    }
 
-    #     Vowels_DIC["ㅑ"] = {"+*": "ya"}
-    #     Vowels_DIC["ㅖ"] = {"+*": "ye"}
-    #     Vowels_DIC["ㅒ"] = {"+*": "ye"}
-    #     Vowels_DIC["ㅛ"] = {"+*": "yo"}
-    #     Vowels_DIC["ㅠ"] = {"+*": "yu"}
-    #     Vowels_DIC["ㅕ"] = {"+*": "yeo"}
-
-    #     Vowels_DIC["ㅟ"] = {"+*": "i"}
-    #     Vowels_DIC["ㅚ"] = {"+*": "e"}
-
-    #     Vowels_DIC["ㅘ"] = {"+*": "wa"}
-    #     Vowels_DIC["ㅚ"] = {"+*": "we"}
-    #     Vowels_DIC["ㅞ"] = {"+*": "we"}
-    #     Vowels_DIC["ㅙ"] = {"+*": "we"}
-    #     Vowels_DIC["ㅟ"] = {"+*": "wi"}
-    #     Vowels_DIC["ㅝ"] = {"+*": "weo"}
-
-    #     Vowels_DIC["ㅢ"] = {"+*": "eui"}
-
-    # return Lead_Consonants_DIC, Vowels_DIC, Tail_Consonants_DIC
-
-    result = []
-
-    result.extend(pre_regex_list)
-    result.extend(lead_consonants_process_regex_list)
-    result.extend(vowels_process_regex_list)
-    result.extend(tail_consonants_process_regex_list)
-    result.extend(post_regex_list)
-
-    return result
+    return result_dic

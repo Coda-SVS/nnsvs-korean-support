@@ -9,8 +9,15 @@ class g2p4Utau(object):
         self.dictionary = get_phn_dictionary(False)
         self.dictionary_label_mode = get_phn_dictionary(True)
 
-    def __call__(self, text: str, use_g2pK: bool = True, descriptive: bool = False, group_vowels: bool = False, labeling_mode: bool = True):
-        text_list = text.split("\n")
+    def __call__(self, text: str, use_g2pK: bool = True, descriptive: bool = False, group_vowels: bool = False, labeling_mode: bool = True, verbose: bool = False):
+        if verbose:
+            print("\033[1;96m[Parameter]\033[0m")
+            print(f"> use_g2pK = {use_g2pK}")
+            print(f"> descriptive = {descriptive}")
+            print(f"> group_vowels = {group_vowels}")
+            print(f"> labeling_mode = {labeling_mode}")
+
+        text_list = text.splitlines()
 
         for idx in range(len(text_list)):
             text_list[idx] = re.sub(r"[-=+,#/\?:^$.@*\"※~&%ㆍ!』\\‘|\(\)\[\]\<\>`\'…》]", "", text_list[idx])
@@ -20,50 +27,63 @@ class g2p4Utau(object):
         if len(text_list) == 0:
             return None
 
+        token_phn_list = []
+        phn_list = []
+
         for idx in range(len(text_list)):
+            if verbose:
+                print("\033[1;96m[Input]\033[0m")
+                print(text_list[idx])
+
             if use_g2pK:
                 if self.g2p == None:
                     import g2pk
 
                     self.g2p = g2pk.G2p()
 
-                text_list[idx] = self.g2p(text_list[idx], descriptive=descriptive, group_vowels=group_vowels)
+                if verbose:
+                    print("\033[1;96m[g2pk Processing]\033[0m")
 
-            jamo_text = j2hcj(h2j(text_list[idx]))
+                text_list[idx] = self.g2p(text_list[idx], descriptive=descriptive, group_vowels=group_vowels, verbose=verbose)
 
-            phn_text = replace2phn(self.dictionary_label_mode if labeling_mode else self.dictionary, jamo_text)
+            jamo_text = j2hcj(h2j(" ".join(text_list[idx])))
 
-            phn_list = list(filter(lambda phn: phn != "", phn_text.split(" ")))
-            phn_list.append("\n")
+            phn_text = replace2phn(self.dictionary_label_mode if labeling_mode else self.dictionary, jamo_text, verbose=verbose)
 
-        return "\n".join(text_list), phn_list[:-1]
+            inner_token_phn_list = list(filter(lambda phn: phn != "", phn_text.split("  ")))
+            token_phn_list.append(inner_token_phn_list)
+
+            inner_phn_list = []
+            for token_phn in inner_token_phn_list:
+                inner_phn_list.extend(token_phn.split(" "))
+            phn_list.append(inner_phn_list)
+
+            if verbose:
+                print("\033[1;96m[Output]\033[0m")
+                print(f"> G2P Processed: {text_list[idx]}")
+                print(f"> Phoneme List: {', '.join(inner_phn_list)}")
+                print(f"> Character Phoneme List: {', '.join(inner_token_phn_list)}")
+
+        return "\n".join(text_list), phn_list, token_phn_list
 
 
 if __name__ == "__main__":
     tester = g2p4Utau()
 
-    def pretty_print(obj):
-        print(f"> G2P Processed: {obj[0]}")
-        print(f"> Phoneme List: {', '.join(obj[1])}")
+    #     text = """안녕하세요
+    # 둥근 해가 떴습니다
+    # 바깥 공기가 상쾌하다
+    # 의사 선생님
+    # 악수를 합시다
+    # 말하다
+    # 라면
+    # 아라라
+    # 랄랄라"""
 
-    text = """안녕하세요
-둥근 해가 떴습니다
-바깥 공기가 상쾌하다
-의사 선생님
-악수를 합시다
-말하다
-라면
-말하다
-아라라
-랄랄라"""
+    # text = "안녕하세요\n둥근 해가 떴습니다\n말하다"
+    text = "악수를 합시다"
 
-    for text_token in text.split("\n"):
-        print("라벨링: True")
-        pretty_print(tester(text_token, labeling_mode=True))
-        print()
-        print("라벨링: False")
-        pretty_print(tester(text_token, labeling_mode=False))
-        print("\n#############################\n")
+    tester(text, labeling_mode=False, verbose=True)
 
     # while True:
     #     try:
