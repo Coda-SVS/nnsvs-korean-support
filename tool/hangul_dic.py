@@ -63,7 +63,7 @@ def get_phn_dictionary(labeling_mode: bool = True):
     pre_regex_list = [
         (r"ㄹ(\s*)ㄹ", r"l\1l "),
         # 모음 뒤, 'ㅎ' 앞의 'ㄹ'
-        # (r"ㄹ(\s*)ㅎ", r"r\1h "),
+        (r"ㄹ(\s*)ㅎ", r"r\1h "),
         # 모음과 모음 사이 'ㄹ'
         (r"(?<=[ㅏ-ㅣ]\s*)ㄹ(?=\s*[ㅏ-ㅣ])", r"r "),
     ]
