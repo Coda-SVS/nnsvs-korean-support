@@ -1,16 +1,20 @@
 import re
+from enum_set import VerboseMode
 from jamo import h2j, j2hcj
 from hangul_dic import get_phn_dictionary, replace2phn
 
 
-class g2p4Utau(object):
+class g2p4utau(object):
     def __init__(self):
         self.g2p = None
         self.dictionary = get_phn_dictionary(False)
         self.dictionary_label_mode = get_phn_dictionary(True)
 
-    def __call__(self, text: str, use_g2pK: bool = True, descriptive: bool = False, group_vowels: bool = False, labeling_mode: bool = True, verbose: bool = False):
-        if verbose:
+    def __call__(self, text: str, use_g2pK: bool = True, descriptive: bool = False, group_vowels: bool = False, labeling_mode: bool = True, verbose: VerboseMode = VerboseMode.NONE):
+        if not use_g2pK:
+            print("The g2pk option is disabled. Conversion results may contain many errors.")
+
+        if verbose.is_flag(VerboseMode.PARAMETER):
             print("\033[1;96m[Parameter]\033[0m")
             print(f"> use_g2pK = {use_g2pK}")
             print(f"> descriptive = {descriptive}")
@@ -20,6 +24,7 @@ class g2p4Utau(object):
         text_list = text.splitlines()
 
         for idx in range(len(text_list)):
+            text_list[idx] = text_list[idx].strip()
             text_list[idx] = re.sub(r"[-=+,#/\?:^$.@*\"※~&%ㆍ!』\\‘|\(\)\[\]\<\>`\'…》]", "", text_list[idx])
 
         text_list = [t for t in text_list if t]
@@ -31,7 +36,7 @@ class g2p4Utau(object):
         phn_list = []
 
         for idx in range(len(text_list)):
-            if verbose:
+            if verbose.is_flag(VerboseMode.INPUT):
                 print("\033[1;96m[Input]\033[0m")
                 print(text_list[idx])
 
@@ -41,10 +46,10 @@ class g2p4Utau(object):
 
                     self.g2p = g2pk.G2p()
 
-                if verbose:
+                if verbose.is_flag(VerboseMode.G2PK):
                     print("\033[1;96m[g2pk Processing]\033[0m")
 
-                text_list[idx] = self.g2p(text_list[idx], descriptive=descriptive, group_vowels=group_vowels, verbose=verbose)
+                text_list[idx] = self.g2p(text_list[idx], descriptive=descriptive, group_vowels=group_vowels, verbose=verbose.is_flag(VerboseMode.G2PK))
 
             jamo_text = j2hcj(h2j(" ".join(text_list[idx])))
 
@@ -58,7 +63,7 @@ class g2p4Utau(object):
                 inner_phn_list.extend(token_phn.split(" "))
             phn_list.append(inner_phn_list)
 
-            if verbose:
+            if verbose.is_flag(VerboseMode.OUTPUT):
                 print("\033[1;96m[Output]\033[0m")
                 print(f"> G2P Processed: {text_list[idx]}")
                 print(f"> Phoneme List: {', '.join(inner_phn_list)}")
@@ -68,7 +73,7 @@ class g2p4Utau(object):
 
 
 if __name__ == "__main__":
-    tester = g2p4Utau()
+    tester = g2p4utau()
 
     #     text = """안녕하세요
     # 둥근 해가 떴습니다
@@ -81,9 +86,9 @@ if __name__ == "__main__":
     # 랄랄라"""
 
     # text = "안녕하세요\n둥근 해가 떴습니다\n말하다"
-    text = "악수를 합시다"
+    text = "공갈 호떡"
 
-    tester(text, labeling_mode=False, verbose=True)
+    tester(text, labeling_mode=False, verbose=VerboseMode.ALL)
 
     # while True:
     #     try:

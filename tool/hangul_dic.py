@@ -6,6 +6,7 @@ import regex
 
 ## For Verbose
 import difflib
+from enum_set import VerboseMode
 
 differ = difflib.Differ()
 
@@ -15,8 +16,10 @@ Vowels_LIST = ["ㅏ", "ㅑ", "ㅓ", "ㅕ", "ㅗ", "ㅛ", "ㅜ", "ㅠ", "ㅡ", "�
 
 
 # TODO: 나중에 함수 위치를 적절한 곳으로 옮기기
-def replace2phn(dic: dict, jamo_text: str, verbose: bool = False):
-    if verbose:
+def replace2phn(dic: dict, jamo_text: str, verbose: VerboseMode = VerboseMode.NONE):
+    verbose__ = verbose.is_flag(verbose.G2P4UTAU)
+
+    if verbose__:
         before_text = jamo_text
         verbose_result = [(jamo_text, "", "init")]
 
@@ -24,7 +27,7 @@ def replace2phn(dic: dict, jamo_text: str, verbose: bool = False):
         for pattern, repl in dic[key]:
             jamo_text = regex.sub(pattern, repl, jamo_text)
 
-            if verbose and not before_text == jamo_text:
+            if verbose__ and not before_text == jamo_text:
                 highlight = False
                 lst = []
                 for diff in differ.compare(before_text, jamo_text):
@@ -46,7 +49,7 @@ def replace2phn(dic: dict, jamo_text: str, verbose: bool = False):
 
                 before_text = jamo_text
 
-    if verbose and len(verbose_result) > 1:
+    if verbose__ and len(verbose_result) > 1:
         print("\033[1;96m[g2p4Utau Processing]\033[0m")
         for line in verbose_result:
             print("->", line[0], f"        [\033[1;92m{line[2]}\033[0m] ({line[1]})")
@@ -153,6 +156,16 @@ def get_phn_dictionary(labeling_mode: bool = True):
     # 종성 #
     ########
     tail_consonants_process_regex_list = [
+        # 음절 끝소리 규칙
+        (r"ㄲ", r"ㄱ"),
+        (r"ㅋ", r"ㄱ"),
+        (r"ㅌ", r"ㄷ"),
+        (r"ㅅ", r"ㄷ"),
+        (r"ㅆ", r"ㄷ"),
+        (r"ㅈ", r"ㄷ"),
+        (r"ㅊ", r"ㄷ"),
+        (r"ㅎ", r"ㄷ"),
+        (r"ㅍ", r"ㅂ"),
         # 악, 앜, 앆... 등에 쓰이는 받침
         (r"ㄱ", r"K "),
         # 앋, 앗, 앚, 앛, 앝, 앟, 았 ... 등에 쓰이는 받침
@@ -178,10 +191,10 @@ def get_phn_dictionary(labeling_mode: bool = True):
 
     ##### 후처리 #####
     post_regex_list = [
-        # # 음소 구분
-        # (r"\s{2}", r" "),
+        # 쌍자음인 'ss' 앞 받침 'T' 제거
+        (r"T(\s*)ss", r"\1ss"),
         # # 글자 구분
-        # (r"\s{3}", r"  "),
+        (r"\s{3,}", r"  "),
     ]
 
     result_dic = {
