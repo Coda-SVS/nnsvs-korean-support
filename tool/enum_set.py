@@ -13,8 +13,8 @@ class VerboseMode(Flag):
     PROGRESS = G2PK | G2P4UTAU
     ALL = PARAMETER | INPUT_OUTPUT | PROGRESS
 
-    def is_flag(self, item):
+    def is_flag(self, item) -> bool:
         return (self.value & item.value) != 0
 
-    def __contains__(self, item):
+    def __contains__(self, item) -> bool:
         return (self.value & item.value) == item.value
