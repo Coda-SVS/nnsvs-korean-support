@@ -1,36 +1,25 @@
+import os, sys
+sys.path.append("../../tool")
 from tqdm import tqdm
+from utils import list_chunk
 from g2p4utau import g2p4utau
 from tqdm.contrib.concurrent import process_map
 from functools import partial
 
+converter = g2p4utau()
+
 
 def table_generator(table_data, idx):
-    converter = g2p4utau()
-
     result = []
     for char in tqdm(table_data[idx], "Converting..."):
         temp = [char]
-        [temp.append(obj) for obj in converter(char, False)]
+        [temp.append(obj) for obj in converter(char)]
         result.append(temp)
 
     return result
 
-
-def list_chunk(lst, n: int):
-    count = len(lst) // n
-    result = [lst[i * count : i * count + count] for i in range(0, n)]
-
-    if isinstance(lst, list):
-        for temp in lst[count * n :]:
-            result[n - 1].append(temp)
-    else:
-        for temp in lst[count * n :]:
-            result[n - 1] += temp
-    return result
-
-
 def table_gen_main(
-    path="result_hangul.origndic", hangul_output_path="result_hangul.table", phn_output_path="result_phn.table", hangul_phn_output_path="result_phn_hangul.table", chunk_count=12
+    path="hangul_all.origndic", hangul_output_path="result_hangul.table", phn_output_path="result_phn.table", hangul_phn_output_path="result_phn_hangul.table", chunk_count=12
 ):
     """
     한글 테이블 생성
@@ -70,14 +59,17 @@ def table_gen_main(
 
     temp_obj = []
     for temp in tqdm(result_list, "Post-processing..."):
-        temp_obj.append(temp)
+        lst = [temp[0], temp[1]]
+        lst.extend(temp[2])
+        lst.extend(temp[3])
+        temp_obj.append(lst)
     result_list = temp_obj
 
     # 음소
 
     result = ""
     for temp in tqdm(result_list, "[Phn] Post-processing..."):
-        result += f"{''.join(temp[3])} {' '.join(temp[3])}\n"
+        result += f"{''.join(temp[2])} {' '.join(temp[2])}\n"
     result = result[:-1]
 
     with open(phn_output_path, "w", encoding="utf-8") as result_file:
@@ -87,7 +79,7 @@ def table_gen_main(
 
     result = ""
     for temp in tqdm(result_list, "[Han] Post-processing..."):
-        result += f"{''.join(temp[0])} {' '.join(temp[3])}\n"
+        result += f"{''.join(temp[0])} {' '.join(temp[2])}\n"
     result = result[:-1]
 
     with open(hangul_output_path, "w", encoding="utf-8") as result_file:
@@ -97,7 +89,7 @@ def table_gen_main(
 
     result = ""
     for temp in tqdm(result_list, "[H+P] Post-processing..."):
-        result += f"{''.join(temp[0])}_{''.join(temp[3])} {' '.join(temp[3])}\n"
+        result += f"{''.join(temp[0])}_{''.join(temp[2])} {' '.join(temp[2])}\n"
     result = result[:-1]
 
     with open(hangul_phn_output_path, "w", encoding="utf-8") as result_file:
@@ -109,7 +101,7 @@ def table_gen_main(
     print("done.")
 
 
-def table_simplify_main(path="hangul.origndic", output_path="result_hangul.origndic", chunk_count=12):
+def table_simplify_main(path="hangul_all.origndic", output_path="result_hangul.origndic", chunk_count=12):
     """
     한글 테이블 축소
 
@@ -155,8 +147,12 @@ def table_simplify_main(path="hangul.origndic", output_path="result_hangul.orign
 
 
 if __name__ == "__main__":
+    base_path = "tool/table_generator"
+
+    table_gen_main_path = [os.path.join(base_path, path) for path in ["hangul_all.origndic", "result_hangul.table", "result_phn.table", "result_phn_hangul.table"]]
+
     # table_simplify_main()
-    table_gen_main()
+    table_gen_main(table_gen_main_path[0], table_gen_main_path[1], table_gen_main_path[2], table_gen_main_path[3])
 
 
 # '가', '가', 'ㄱㅏ', ['g', 'a'], ['ga']
