@@ -14,7 +14,6 @@ Consonants_LIST = ["ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ"
 Vowels_LIST = ["ㅏ", "ㅑ", "ㅓ", "ㅕ", "ㅗ", "ㅛ", "ㅜ", "ㅠ", "ㅡ", "ㅣ", "ㅐ", "ㅒ", "ㅔ", "ㅖ", "ㅘ", "ㅙ", "ㅚ", "ㅝ", "ㅞ", "ㅟ", "ㅢ"]
 
 
-# TODO: 나중에 함수 위치를 적절한 곳으로 옮기기
 def replace2phn(dic: dict, jamo_text: str, verbose: VerboseMode = VerboseMode.NONE):
     verbose__ = verbose.is_flag(verbose.G2P4UTAU)
 
