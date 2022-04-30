@@ -1,7 +1,9 @@
+/tool/MFA
 /tool/test.py
 /tool/Scripts
 pyvenv.cfg
 
+*.lab~
 *.wav
 *.mp4
 
