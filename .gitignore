@@ -1,6 +1,10 @@
 /tool/MFA
-/tool/test.py
+/tool/share
 /tool/Scripts
+
+/tool/test.py
+/tool/duplicate_clear.py
+
 pyvenv.cfg
 
 *.lab~
