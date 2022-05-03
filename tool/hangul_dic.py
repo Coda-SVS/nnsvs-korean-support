@@ -26,10 +26,12 @@ def replace2phn(dic: dict, jamo_text: str, verbose: VerboseMode = VerboseMode.NO
             jamo_text = regex.sub(pattern, repl, jamo_text)
 
             if verbose__ and not before_text == jamo_text:
-                if differ == None:
-                    import difflib
+                global differ
 
-                    differ = difflib.Differ()
+                if differ == None:
+                    from difflib import Differ
+
+                    differ = Differ()
 
                 highlight = False
                 lst = []
