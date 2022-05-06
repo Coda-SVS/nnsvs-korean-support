@@ -5,6 +5,8 @@
 /tool/test.py
 /tool/duplicate_clear.py
 
+.vscode
+
 pyvenv.cfg
 
 *.lab~
