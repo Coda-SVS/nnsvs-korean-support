@@ -1,5 +1,5 @@
 # in_rest_idx: 63
-# in_lfx0_idx: 1
+# in_lfx0_idx: 190
 
 QS "L-Phone_Muon" {*^pau-*,*^sil-*,*^br-*}
 QS "L-Phone_Consonant_Yangsuneum" {*^b-*,*^pp-*,*^p-*,*^m-*,*^P-*}
