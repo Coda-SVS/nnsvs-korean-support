@@ -5,6 +5,7 @@
 NNSVS用のquestionを生成するやつ
 """
 import json
+from dim_counter import dim_count
 
 
 def str_phone_questions(list_all_phonemes, dict_phoneme_classification, mode):
@@ -40,7 +41,7 @@ def str_phone_questions(list_all_phonemes, dict_phoneme_classification, mode):
         line = " ".join(("QS", s1, s2))
         lines.append(line)
 
-    return "\n".join(lines) + "\n"
+    return "\n".join(lines) + "\n\n"
 
 
 def str_fixed_qs_and_cqs():
@@ -48,55 +49,45 @@ def str_fixed_qs_and_cqs():
     音素とは関係なく必ず追加する文字列を返す
     """
     s = (
-        # p1
-        'QS "C-Phone_Language_Independent_Silence"   {s@*}\n'
-        'QS "C-Phone_Language_Independent_Pause"     {p@*}\n'
-        'QS "C-Phone_Language_Independent_Break"     {b@*}\n'
-        'QS "C-Phone_Language_Independent_Consonant" {c@*}\n'
-        'QS "C-Phone_Language_Independent_Vowel"     {v@*}\n'
-        # それ以外
+        "# The following was copied from the NNSVS hed\n"
+        "\n# absolute pitch (L/C/R)\n"
+        'CQS "d1" {/D:(\\NOTE)!}\n'
+        'CQS "e1" {/E:(\\NOTE)]}\n'
+        'CQS "f1" {/F:(\\NOTE)#}\n'
+        "\n# relative pitch (L/C/R)\n"
+        'CQS "d2" {!(\\d+)#}\n'
+        'CQS "e2" {](\\d+)^}\n'
+        'CQS "f2" {#(\\d+)#}\n'
+        "\n# phoneme-level positional features (C)\n"
         'CQS "p12" {-(\\d+)!}\n'
         'CQS "p13" {!(\\d+)[}\n'
-        #'CQS "p14" {[(\\d+)$}\n'
+        "\n# distance between consonant and vowel\n"
+        'CQS "p14" {[(\\d+)$}\n'
         'CQS "p15" {$(\\d+)]}\n'
-        #
+        "\n# number of phonemes in a syllable (L/C/R)\n"
         'CQS "a1" {/A:(\\d+)-}\n'
+        'CQS "b1" {/B:(\\d+)_}\n'
+        'CQS "c1" {/C:(\\d+)+}\n'
+        "\n# syllable potional features (L/C/R)\n"
         'CQS "a2" {-(\\d+)-}\n'
         'CQS "a3" {-(\\d+)@}\n'
-        #
-        'QS "L-Syllable_Language=KOR" {*@KOR~*}\n'
-        'QS "L-Syllable_Language=KOR_0" {*@KOR~0/B:*}\n'
-        'QS "L-Syllable_Language=KOR_1" {*@KOR~1/B:*}\n'
-        #
-        'CQS "b1" {/B:(\\d+)_}\n'
         'CQS "b2" {_(\\d+)_}\n'
         'CQS "b3" {_(\\d+)@}\n'
-        #
-        'QS "C-Syllable_Language=KOR" {*@KOR|*}\n'
-        'QS "C-Syllable_Language=KOR_0" {*@KOR|0/C:*}\n'
-        'QS "C-Syllable_Language=KOR_1" {*@KOR|1/C:*}\n'
-        #
-        'CQS "c1" {/C:(\\d+)+}\n'
         'CQS "c2" {+(\\d+)+}\n'
         'CQS "c3" {+(\\d+)@}\n'
-        #
-        'QS "R-Syllable_Language=KOR" {*@KOR&*}\n'
-        'QS "R-Syllable_Language=KOR_0" {*@KOR&0/D:*}\n'
-        'QS "R-Syllable_Language=KOR_1" {*@KOR&1/D:*}\n'
-        #
-        'CQS "d1" {/D:(\\NOTE)!}\n'
-        'CQS "d2" {!(\\d+)#}\n'
-        #'CQS "d3" {#(\\d+)$}\n'
-        'CQS "d6" {|(\\d+)&}\n'
-        'CQS "d7" {&(\\d+);}\n'
-        'CQS "d8" {;(\\d+)-}\n'
-        #
-        'CQS "e1" {/E:(\\NOTE)]}\n'
-        'CQS "e2" {](\\d+)^}\n'
-        #'CQS "e3" {^(\\d+)=}\n'
+        "\n# length of current note (C)\n"
         'CQS "e6" {!(\\d+)@}\n'
         'CQS "e7" {@(\\d+)#}\n'
         'CQS "e8" {#(\\d+)+}\n'
+        "\n# length of previous note (L)\n"
+        'CQS "d6" {|(\\d+)&}\n'
+        'CQS "d7" {&(\\d+);}\n'
+        'CQS "d8" {;(\\d+)-}\n'
+        "\n# length of next note (R)\n"
+        'CQS "f6" {$(\\d+)+}\n'
+        'CQS "f7" {+(\\d+)%}\n'
+        'CQS "f8" {%(\\d+);}\n'
+        "\n# note-level positional features in measures (C)\n"
         'CQS "e10_position_by_note_in_measure"      {](\\d+)$}\n'
         'CQS "e11_position_by_note_in_measure"      {$(\\d+)|}\n'
         'CQS "e12_position_by_10ms_in_measure"      {|(\\d+)[}\n'
@@ -105,7 +96,8 @@ def str_fixed_qs_and_cqs():
         'CQS "e15_position_by_96th_note_in_measure" {](\\d+)=}\n'
         'CQS "e16_position_by_percent_in_measure"   {=(\\d+)^}\n'
         'CQS "e17_position_by_percent_in_measure"   {^(\\d+)~}\n'
-        'CQS "e18_position_by_note"      {∼(\\d+)#}\n'
+        "\n# note-level positional features in phrase (C)\n"
+        'CQS "e18_position_by_note"      {~(\\d+)#}\n'
         'CQS "e19_position_by_note"      {#(\\d+)_}\n'
         'CQS "e20_position_by_10ms"      {_(\\d+);}\n'
         'CQS "e21_position_by_10ms"      {;(\\d+)$}\n'
@@ -113,23 +105,15 @@ def str_fixed_qs_and_cqs():
         'CQS "e23_position_by_96th_note" {&(\\d+)%}\n'
         'CQS "e24_position_by_percent"   {%(\\d+)[}\n'
         'CQS "e25_position_by_percent"   {[(\\d+)|}\n'
-        #'CQS "e26" {|(\\d+)]}\n'
-        #'CQS "e27" {](\\d+)-}\n'
-        'CQS "e57" {~(\\d+)+}\n'
-        'CQS "e58" {+(\\d+)!}\n'
-        #
-        #'CQS "f1" {/F:(\\NOTE)#}\n'
-        #'CQS "f2" {#(\\d+)#}\n'
-        #'CQS "f3" {#(\\d+)-}\n'
-        'CQS "f6" {$(\\d+)+}\n'
-        'CQS "f7" {+(\\d+)%}\n'
-        'CQS "f8" {%(\\d+);}\n'
+        "\n# pitch diff\n"
+        'CQS "e57" {~([pm]\\d+)+}\n'
+        'CQS "e58" {+([pm]\\d+)!}'
     )
     return s
 
 
 def main():
-    with open("tool\\hed_generator\\config_v0.2.json", mode="r", encoding="utf-8") as fj:
+    with open("tool\\hed_generator\\config.json", mode="r", encoding="utf-8") as fj:
         d_json = json.load(fj)
     list_all_phonemes = d_json["all_phonemes"]
     dict_phoneme_classification = d_json["phoneme_classification"]
@@ -139,8 +123,18 @@ def main():
     s += str_phone_questions(list_all_phonemes, dict_phoneme_classification, mode="R")
     s += "\n"
     s += str_fixed_qs_and_cqs()
-    with open("tool\\hed_generator\\result_question_generator.hed", mode="w", encoding="utf-8") as ft:
+
+    hed_file_path = "tool\\hed_generator\\result_question_generator.hed"
+
+    with open(hed_file_path, mode="w", encoding="utf-8") as ft:
         ft.write(s)
+
+    in_rest_idx, in_lfx0_idx = dim_count(hed_file_path)
+
+    with open(hed_file_path, mode="w", encoding="utf-8") as ft:
+        lines = s.split("\n")
+        lines.insert(0, f"# in_rest_idx: {in_rest_idx}\n# in_lfx0_idx: {in_lfx0_idx}\n")
+        ft.write("\n".join(lines))
 
 
 if __name__ == "__main__":
