@@ -198,8 +198,6 @@ def get_phn_dictionary(labeling_mode: bool = True):
     post_regex_list = [
         # 쌍자음인 'ss' 앞 받침 'T' 제거
         (r"T(\s*)ss", r"\1ss"),
-        # # 글자 구분
-        (r"\s{3,}", r"  "),
     ]
 
     result_dic = {

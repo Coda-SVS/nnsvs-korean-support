@@ -7,10 +7,19 @@ from hangul_dic import get_phn_dictionary, replace2phn
 class g2p4utau(object):
     def __init__(self):
         self.g2p = None
+        self.empty_str_remover = lambda text: not text.isspace()
         self.dictionary = get_phn_dictionary(False)
         self.dictionary_label_mode = get_phn_dictionary(True)
 
-    def __call__(self, text: str, use_g2pK: bool = True, descriptive: bool = False, group_vowels: bool = False, labeling_mode: bool = True, verbose: VerboseMode = VerboseMode.NONE):
+    def __call__(
+        self,
+        text: str,
+        use_g2pK: bool = True,
+        descriptive: bool = False,
+        group_vowels: bool = False,
+        labeling_mode: bool = True,
+        verbose: VerboseMode = VerboseMode.NONE,
+    ):
         if not use_g2pK:
             print("The g2pk option is disabled. Conversion results may contain many errors.")
 
@@ -26,14 +35,16 @@ class g2p4utau(object):
         for idx in range(len(text_list)):
             text_list[idx] = text_list[idx].strip()
             text_list[idx] = re.sub(r"[-=+,#/\?:^$.@*\"※~&%ㆍ!』\\‘|\(\)\[\]\<\>`\'…》]", "", text_list[idx])
+            text_list[idx] = re.sub(r"\s{2,}|\t", r" ", text_list[idx])
 
-        text_list = [t for t in text_list if t]
+        text_list = list(filter(lambda t: not t.isspace(), text_list))
 
         if len(text_list) == 0:
-            return None
+            return "", [], []
 
-        token_phn_list = []
         phn_list = []
+        token_phn_list = []
+        word_phn_list = []
 
         for idx in range(len(text_list)):
             if verbose.is_flag(VerboseMode.INPUT):
@@ -55,18 +66,29 @@ class g2p4utau(object):
 
             phn_text = replace2phn(self.dictionary_label_mode if labeling_mode else self.dictionary, jamo_text, verbose=verbose)
 
-            inner_token_phn_list = list(filter(lambda phn: phn != "", phn_text.split("  ")))
-            token_phn_list.append(inner_token_phn_list)
+            inner_word_phn_list = list(filter(self.empty_str_remover, phn_text.split("   ")))
+            for phn_word in inner_word_phn_list:
+                phn_tokens = list(filter(self.empty_str_remover, [phn_tokens.strip() for phn_tokens in phn_word.split("  ")]))
+                word_phn_list.append(phn_tokens)
 
-            inner_phn_list = []
-            for token_phn in inner_token_phn_list:
-                inner_phn_list.extend(token_phn.split(" "))
-            phn_list.append(inner_phn_list)
+            for phn_word in word_phn_list:
+                token_phn_list.extend(phn_word)
+
+            for token_phn in token_phn_list:
+                for phn in token_phn.split(" "):
+                    phn_list.append(phn)
 
             if verbose.is_flag(VerboseMode.OUTPUT):
                 print("\033[1;96m[Output]\033[0m")
                 print(f"> G2P Processed: {text_list[idx]}")
-                print(f"> Phoneme List: {', '.join(inner_phn_list)}")
-                print(f"> Character Phoneme List: {', '.join(inner_token_phn_list)}")
+                word_phn_temp_list = []
+                for tokens in word_phn_list:
+                    word_phn_temp_list.append("\033[1;32m,\033[0m ".join(tokens))
+                temp_output = "\033[1;33m(\033[0m" + "\033[1;33m) (\033[0m".join(word_phn_temp_list) + "\033[1;33m)\033[0m"
+                print(f"> Word Phoneme List: {temp_output}")
+                temp_output = "\033[1;32m,\033[0m ".join(token_phn_list)
+                print(f"> Character Phoneme List: {temp_output}")
+                temp_output = "\033[1;32m,\033[0m ".join(phn_list)
+                print(f"> Phoneme List: {temp_output}")
 
-        return "\n".join(text_list), phn_list, token_phn_list
+        return "\n".join(text_list), phn_list, token_phn_list, word_phn_list
