@@ -8,6 +8,7 @@
     "phoneme_classification": {
         "Muon": ["pau", "sil", "br"],
 
+
         "Consonant_Yangsuneum": ["b", "pp", "p", "m", "P"],
         "Consonant_Chijoeum": ["d", "tt", "t", "s", "ss", "n", "r", "l", "T"],
         "Consonant_Gyeonggugaeeum": ["j", "jj", "ch"],
@@ -25,6 +26,7 @@
         "Consonant_Gongmyeongeum_Bieum": ["m", "n", "NG"],
         "Consonant_Gongmyeongeum_Yueum": ["r", "l"],
 
+
         "Vowel_Jeonseol_Pyeongsun": ["i", "e"],
         "Vowel_Jeonseol_Wonsun": ["y", "i", "w", "e"],
         "Vowel_Huseol_Pyeongsun": ["eu", "eo", "a"],
@@ -33,6 +35,7 @@
         "Vowel_High": ["i", "y", "eu", "u"],
         "Vowel_Middle": ["e", "w", "eo", "o"],
         "Vowel_Low": ["e", "a"],
+
 
         "Lead_Consonant": ["g", "n", "d", "r", "l", "m", "b", "s", "j", "ch", "k", "t", "p", "h", "kk", "tt", "pp", "ss", "jj"],
         "Middle_Vowel": ["a", "eo", "o", "u", "eu", "i", "e", "y", "w"],
