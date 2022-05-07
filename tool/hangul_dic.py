@@ -66,6 +66,7 @@ def get_phn_dictionary(labeling_mode: bool = True):
 
     ##### 전처리 #####
     pre_regex_list = [
+        # 종성 'ㄹ'과 초성 'ㄹ'이 만날 경우 둘 다 'l'로 발음
         (r"ㄹ(\s*)ㄹ", r"l\1l "),
         # 모음 뒤, 'ㅎ' 앞의 'ㄹ'
         (r"ㄹ(\s*)ㅎ", r"r\1h "),

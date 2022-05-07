@@ -30,15 +30,20 @@ class g2p4utau(object):
             print(f"> group_vowels = {group_vowels}")
             print(f"> labeling_mode = {labeling_mode}")
 
+        # 여러 줄의 입력 처리
         text_list = text.splitlines()
 
+        # 앞뒤공백 제거, 특수문자 제거
         for idx in range(len(text_list)):
             text_list[idx] = text_list[idx].strip()
             text_list[idx] = re.sub(r"[-=+,#/\?:^$.@*\"※~&%ㆍ!』\\‘|\(\)\[\]\<\>`\'…》]", "", text_list[idx])
+            # 공백을 구분자로 사용하므로, 불필요한 2개 이상의 공백을 제거 (단어는 공백 3개, 문자는 공백 2개로 구분)
             text_list[idx] = re.sub(r"\s{2,}|\t", r" ", text_list[idx])
 
+        # 비어있는 문자열 제거
         text_list = list(filter(lambda t: not t.isspace(), text_list))
 
+        # 전처리 후 입력 문자열이 없을 경우
         if len(text_list) == 0:
             return "", [], []
 
@@ -51,6 +56,7 @@ class g2p4utau(object):
                 print("\033[1;96m[Input]\033[0m")
                 print(text_list[idx])
 
+            # g2pk로 전처리
             if use_g2pK:
                 if self.g2p == None:
                     import g2pk
@@ -62,18 +68,23 @@ class g2p4utau(object):
 
                 text_list[idx] = self.g2p(text_list[idx], descriptive=descriptive, group_vowels=group_vowels, verbose=verbose.is_flag(VerboseMode.G2PK))
 
+            # 자모 분리
             jamo_text = j2hcj(h2j(" ".join(text_list[idx])))
 
+            # 사전을 바탕으로 로마자 음소로 변환
             phn_text = replace2phn(self.dictionary_label_mode if labeling_mode else self.dictionary, jamo_text, verbose=verbose)
 
+            # 단어 단위 묶음
             inner_word_phn_list = list(filter(self.empty_str_remover, phn_text.split("   ")))
             for phn_word in inner_word_phn_list:
                 phn_tokens = list(filter(self.empty_str_remover, [phn_tokens.strip() for phn_tokens in phn_word.split("  ")]))
                 word_phn_list.append(phn_tokens)
 
+            # 글자 단위 묶음
             for phn_word in word_phn_list:
                 token_phn_list.extend(phn_word)
 
+            # 음소 단위 묶음
             for token_phn in token_phn_list:
                 for phn in token_phn.split(" "):
                     phn_list.append(phn)
