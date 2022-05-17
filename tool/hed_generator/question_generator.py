@@ -41,7 +41,7 @@ def str_phone_questions(list_all_phonemes, dict_phoneme_classification, mode):
         line = " ".join(("QS", s1, s2))
         lines.append(line)
 
-    return "\n".join(lines) + "\n\n"
+    return lines
 
 
 def str_fixed_qs_and_cqs():
@@ -115,12 +115,20 @@ def str_fixed_qs_and_cqs():
 def main():
     with open("tool\\hed_generator\\config.json", mode="r", encoding="utf-8") as fj:
         d_json = json.load(fj)
+
     list_all_phonemes = d_json["all_phonemes"]
     dict_phoneme_classification = d_json["phoneme_classification"]
+
     s = ""
-    s += str_phone_questions(list_all_phonemes, dict_phoneme_classification, mode="L")
-    s += str_phone_questions(list_all_phonemes, dict_phoneme_classification, mode="C")
-    s += str_phone_questions(list_all_phonemes, dict_phoneme_classification, mode="R")
+    for l, c, r in zip(
+        str_phone_questions(list_all_phonemes, dict_phoneme_classification, mode="L"),
+        str_phone_questions(list_all_phonemes, dict_phoneme_classification, mode="C"),
+        str_phone_questions(list_all_phonemes, dict_phoneme_classification, mode="R"),
+    ):
+        s += f"{l}\n"
+        s += f"{c}\n"
+        s += f"{r}\n"
+        s += "\n"
     s += "\n"
     s += str_fixed_qs_and_cqs()
 
@@ -129,11 +137,12 @@ def main():
     with open(hed_file_path, mode="w", encoding="utf-8") as ft:
         ft.write(s)
 
-    in_rest_idx, in_lfx0_idx = dim_count(hed_file_path)
+    in_rest_idx, in_lfx0_idx, count_dim = dim_count(hed_file_path)
 
     with open(hed_file_path, mode="w", encoding="utf-8") as ft:
         lines = s.split("\n")
-        lines.insert(0, f"# in_rest_idx: {in_rest_idx}\n# in_lfx0_idx: {in_lfx0_idx}\n")
+        lines.insert(0, f"# feature dim: {count_dim + 4} for acoustic model, {count_dim} for duration/timelag")
+        lines.insert(1, f"# in_rest_idx: {in_rest_idx}\n# in_lfx0_idx: {in_lfx0_idx}\n")
         ft.write("\n".join(lines))
 
 
