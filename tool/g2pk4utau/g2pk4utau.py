@@ -4,7 +4,7 @@ from jamo import h2j, j2hcj
 from hangul_dic import get_phn_dictionary, replace2phn
 
 
-class g2p4utau(object):
+class g2pk4utau(object):
     def __init__(self):
         self.g2p = None
         self.empty_str_remover = lambda text: not text.isspace()
