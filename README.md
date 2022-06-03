@@ -60,8 +60,7 @@
 
 ## 🚩로드맵
 
-> 현재 진행중인 작업: 사전 개선 + CSD 음소 정렬  
-> 이후 진행할 작업: CSD 데이터 세트로 NNSVS 모델 학습
+> [프로젝트 페이지](https://github.com/orgs/Kor-SVS/projects/1/views/1)
 
 <img src="./resources/nnsvs-korean-support.kor.svg" />
 
@@ -71,8 +70,10 @@
 
 -   [NNSVS](https://github.com/r9y9/nnsvs)
 -   [ENUNU](https://github.com/oatsu-gh/ENUNU)
+-   [enunu_training_kit](https://github.com/oatsu-gh/enunu_training_kit)
 -   [nnsvs-custom-stripts](https://github.com/oatsu-gh/nnsvs-custom-stripts)
 -   [nnsvs-english-support](https://github.com/DynamiVox/nnsvs-english-support)
+-   [utaupy](https://github.com/oatsu-gh/utaupy)
 -   [g2pk](https://github.com/Kyubyong/g2pK)
 -   [Kaldi](https://github.com/kaldi-asr/kaldi)
 -   [MFA (Montreal-Forced-Aligner)](https://montreal-forced-aligner.readthedocs.io)
