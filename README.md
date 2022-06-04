@@ -1,6 +1,6 @@
 # nnsvs-korean-support
 
-> ⚠️ **해당 저장소는 아직 완벽하지 않습니다!**   
+> ⚠️ **해당 저장소는 아직 완벽하지 않습니다!**  
 > 🚨 내용이 언제든지 변경될 수 있습니다.
 
 :pushpin: [NNSVS](https://github.com/r9y9/nnsvs) 한국어 지원 프로젝트
@@ -34,12 +34,12 @@
 
     > 대부분 Python으로 작성하고 있습니다.
 
+    > 외부로 이동된 모듈이 있습니다. ([링크](https://github.com/Kor-SVS/enunu-kor-tool))
+
     -   hed 파일 생성기
     -   table 파일 생성기
     -   textgrid 형식을 wavesurfer의 lab 형식으로 변환  
          (마지막 음소는 변환 과정에 오차가 있습니다)
-
-    > 외부로 이동된 모듈이 있습니다. ([링크](https://github.com/Kor-SVS/enunu-kor-tool))
 
 -   /MFA => "Montreal-Forced-Aligner" 음소 강제 정렬을 도와주는 외부 도구
 
