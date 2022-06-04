@@ -1,9 +1,9 @@
 import os
 import re
 from tqdm import tqdm
-from g2p4utau import g2p4utau
+from enunu_kor_tool import g2pk4utau
 
-converter = g2p4utau()
+converter = g2pk4utau.g2pk4utau()
 
 
 def convert(table_data: dict, text: str, use_g2p4utau=True):

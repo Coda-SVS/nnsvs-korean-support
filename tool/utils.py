@@ -1,5 +1,3 @@
-
-
 def list_chunk(lst, n: int):
     count = len(lst) // n
     result = [lst[i * count : i * count + count] for i in range(0, n)]
@@ -11,4 +9,3 @@ def list_chunk(lst, n: int):
         for temp in lst[count * n :]:
             result[n - 1] += temp
     return result
-
