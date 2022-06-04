@@ -9,13 +9,13 @@ def dim_count(hed_file_path: str = "tool\\hed_generator\\result_question_generat
     in_lfx0_idx = 0
 
     for n in range(len(binary_dict)):
-        if binary_dict[n][0] == "C-Phone_Muon":
+        if binary_dict[n][0] == "C-Silence":
             in_rest_idx = n
             print("in_rest_idx:", in_rest_idx)
             break
 
     for n in range(len(continuous_dict)):
-        if continuous_dict[n][0] == "e1":  # the absolute pitch of the current note
+        if continuous_dict[n][0] == "e1_absolute_pitch":  # the absolute pitch of the current note
             in_lfx0_idx = n + len(binary_dict)
             print("in_lfx0_idx:", in_lfx0_idx)
             break

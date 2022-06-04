@@ -1,12 +1,12 @@
 {
     "all_phonemes": [
-        "pau", "sil", "br",
+        "pau", "sil",
         "g", "n", "d", "r", "l", "m", "b", "s", "j", "ch", "k", "t", "p", "h", "kk", "tt", "pp", "ss", "jj", "K", "T", "P", "NG",
         "a", "eo", "o", "u", "eu", "i", "e", "y", "w"
     ],
 
     "phoneme_classification": {
-        "Muon": ["pau", "sil", "br"],
+        "Silence": ["pau", "sil"],
 
 
         "Consonant_Yangsuneum": ["b", "pp", "p", "m", "P"],
