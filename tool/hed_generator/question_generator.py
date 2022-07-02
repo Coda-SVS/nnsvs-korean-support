@@ -4,6 +4,7 @@
 """
 NNSVS用のquestionを生成するやつ
 """
+import os
 import json
 from dim_counter import dim_count
 
@@ -24,14 +25,16 @@ def str_phone_questions(list_all_phonemes, dict_phoneme_classification, mode):
 
     # 1行分の文字列のリスト。改行文字なし。
     lines = {"book": [], "single": []}
+    book_pad = 54
+    single_pad = 29
 
     # 音素の分類質問を行に追加
     for key, l_val in dict_phoneme_classification.items():
         # キーの文字列
         if key == "Silence":
-            s1 = f'"{mode}-{key}"'.ljust(39, " ")
+            s1 = f'"{mode}-{key}"'.ljust(book_pad, " ")
         else:
-            s1 = f'"{mode}-Phone_{key}"'.ljust(39, " ")
+            s1 = f'"{mode}-Phone_{key}"'.ljust(book_pad, " ")
         # 値の文字列
         s2 = "{" + ",".join(f"{sign_1}{ph}{sign_2}" for ph in l_val) + "}"
         # くっつける
@@ -41,7 +44,7 @@ def str_phone_questions(list_all_phonemes, dict_phoneme_classification, mode):
 
     # 全音素の質問を行に追加
     for ph in list_all_phonemes:
-        s1 = f'"{mode}-Phone_{ph}"'.ljust(39, " ")
+        s1 = f'"{mode}-Phone_{ph}"'.ljust(single_pad, " ")
         s2 = "{" + f"{sign_1}{ph}{sign_2}" + "}"
         line = " ".join(("QS", s1, s2))
         lines["single"].append(line)
@@ -118,7 +121,9 @@ def str_fixed_qs_and_cqs():
 
 
 def main():
-    with open("tool\\hed_generator\\config_min.json", mode="r", encoding="utf-8") as fj:
+    dic_filename = "config.json"
+
+    with open(os.path.join("tool", "hed_generator", dic_filename), mode="r", encoding="utf-8") as fj:
         d_json = json.load(fj)
 
     list_all_phonemes = d_json["all_phonemes"]
@@ -149,7 +154,7 @@ def main():
     in_rest_idx, in_lfx0_idx, count_dim = dim_count(hed_file_path)
 
     with open(hed_file_path, mode="w", encoding="utf-8") as ft:
-        lines = s.split("\n")
+        lines = s.splitlines(keepends=False)
         lines.insert(0, f"# feature dim: {count_dim + 4} for acoustic model, {count_dim} for duration/timelag")
         lines.insert(1, f"# in_rest_idx: {in_rest_idx}\n# in_lfx0_idx: {in_lfx0_idx}\n")
         ft.write("\n".join(lines))
