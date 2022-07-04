@@ -63,6 +63,8 @@
 
 ## 🙏 출처 및 도움을 받은 곳
 
+> 도움을 주신 많은 분들에게 감사드립니다!
+
 **🔍 참고 문서**
 
 -   [NNSVS](https://github.com/r9y9/nnsvs)
@@ -76,4 +78,6 @@
 -   [MFA (Montreal-Forced-Aligner)](https://montreal-forced-aligner.readthedocs.io)
 -   [MFA 메뉴얼](https://chldkato.tistory.com/195)
 
-도움을 주신 많은 분들에게 감사드립니다!
+**📍 기여자**
+
+-   [@MALCHA-UTAU](https://github.com/MALCHA-UTAU): 음소 사전 베이스 작성, 데이터 셋 구축
