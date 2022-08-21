@@ -63,7 +63,7 @@
 
 **🔍 참고 문서**
 
--   [NNSVS](https://github.com/r9y9/nnsvs)
+-   [NNSVS](https://github.com/nnsvs/nnsvs)
 -   [ENUNU](https://github.com/oatsu-gh/ENUNU)
 -   [enunu_training_kit](https://github.com/oatsu-gh/enunu_training_kit)
 -   [nnsvs-custom-stripts](https://github.com/oatsu-gh/nnsvs-custom-stripts)
