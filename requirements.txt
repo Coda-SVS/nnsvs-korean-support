@@ -1,6 +1,0 @@
-g2pK
-jamo
-regex
-tqdm
-utaupy
-textgrid

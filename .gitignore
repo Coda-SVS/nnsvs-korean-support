@@ -1,20 +1,13 @@
 /dic/old
 /hed/old
-/tool/old
-/tool/hed_generator/old
-
-/tool/MFA
-/tool/etc
-/tool/share
-/tool/Scripts
-
-/tool/test.py
-/tool/duplicate_clear.py
+/tool/*
+requirements.txt
 
 .vscode
 
 pyvenv.cfg
 
+*.drawio
 *.lab~
 *.wav
 *.mp4
