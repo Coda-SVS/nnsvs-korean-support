@@ -1,8 +1,10 @@
 # 음소 정보
 
-> ### Ver. 2.0
+> ### Ver. 2.1
 
 > **ℹ️ 다양한 언어의 통합을 상정하여, 여러 프로젝트의 음소표를 참고하고 있습니다.**
+
+> hed 파일을 생성하는 스크립트는 [hed_generator](https://github.com/Kor-SVS/hed_generator)에서 확인할 수 있습니다.
 
 ## 음소표
 
