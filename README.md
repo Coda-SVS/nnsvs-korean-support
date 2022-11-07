@@ -19,6 +19,10 @@
 From @Cardroid6
 ```
 
+### 데모 영상
+
+[![Video Label](http://img.youtube.com/vi/FavesV-Huv4/0.jpg)](https://youtu.be/FavesV-Huv4?t=0s)
+
 ## 💾 파일
 
 1. [hed 파일](./hed)
